@@ -121,7 +121,7 @@ export default function Gallery() {
         {showUpload && <UploadImage />}
 
         <main className="gallery-body">
-          <ErrorBanner>{error}</ErrorBanner>
+          {!showUpload && <ErrorBanner>{error}</ErrorBanner>}
           {loading && images.length === 0 && <LoadingSpinner />}
           {!loading && !error && images.length === 0 && (
             <div className="gallery-empty-state">No images found</div>
@@ -136,6 +136,7 @@ export default function Gallery() {
                   showDetails={true}
                   showLike={true}
                   onLike={handleLike}
+                  maxDescLength={70}
                 />
               ))}
             </div>

@@ -97,20 +97,13 @@ export const uploadImage = async (userId, file, description) => {
     compressed?.name || file?.name || "image.jpg"
   );
 
-  try {
-    const res = await api.post(IMAGES_ENDPOINTS.BASE, formData, {
-      headers: {
-        ...createUserHeaders(userId),
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return res.data;
-  } catch (err) {
-    if (err.response?.data) {
-      throw err.response.data;
-    }
-    throw err;
-  }
+  const res = await api.post(IMAGES_ENDPOINTS.BASE, formData, {
+    headers: {
+      ...createUserHeaders(userId),
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
 };
 
 export const fetchImage = async (imageId, userId = null) => {

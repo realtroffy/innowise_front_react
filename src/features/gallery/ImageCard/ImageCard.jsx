@@ -1,38 +1,40 @@
 import React from "react";
 import "./ImageCard.css";
 
-const MAX_DESC_LEN = 300;
+const DEFAULT_MAX_DESC_LEN = 300;
 
 export default function ImageCard({
-  image,
-  onClick,
-  showDetails = true,
-  showLike = false,
-  onLike,
-}) {
+                                    image,
+                                    onClick,
+                                    showDetails = true,
+                                    showLike = false,
+                                    onLike,
+                                    maxDescLength = DEFAULT_MAX_DESC_LEN,
+                                  }) {
   if (!image) {
     return null;
   }
 
-  const shortDesc =
-    image.description?.length > MAX_DESC_LEN
-      ? image.description.slice(0, MAX_DESC_LEN) + "…"
-      : image.description;
+  const displayDesc =
+    maxDescLength === null || maxDescLength === Infinity
+      ? image.description
+      : image.description?.length > maxDescLength
+        ? image.description.slice(0, maxDescLength) + "…"
+        : image.description;
 
   return (
     <div
       className="gallery-image-card image-card-clickable"
       onClick={() => onClick?.(image)}
     >
-      <img src={image.url} alt={shortDesc || "img"} className="img-view" />
+      <img src={image.url} alt={displayDesc || "img"} className="img-view" />
 
       {showDetails && (
         <div className="image-info">
           <div className="image-author">
             Author: {image.userName || "Anonymous"}
           </div>
-
-          <div className="image-desc">{shortDesc}</div>
+          <div className="image-desc">{displayDesc}</div>
         </div>
       )}
 

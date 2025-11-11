@@ -18,7 +18,6 @@ export default function UploadImage() {
   const [uploadDesc, setUploadDesc] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
-  const [validationError, setValidationError] = useState(null);
   const fileInputRef = useRef(null);
 
   if (!user) {
@@ -27,7 +26,6 @@ export default function UploadImage() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    setValidationError(null);
     setValidationErrors({});
     dispatch(clearError());
 
@@ -35,14 +33,14 @@ export default function UploadImage() {
       file: uploadFile,
       description: uploadDesc,
     });
+
     if (!validation.isValid) {
       setValidationErrors(validation.errors);
-      setValidationError(validation.errorMessage);
       return;
     }
 
     if (!user?.id) {
-      setValidationError("User ID is required");
+      setValidationErrors({ general: "User ID is required" });
       return;
     }
 
@@ -58,13 +56,22 @@ export default function UploadImage() {
       setUploadFile(null);
       setUploadDesc("");
       setValidationErrors({});
-      setValidationError(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
       setShowUploadForm(false);
     } catch (error) {
       console.error("Upload image error:", error);
+    }
+  };
+
+  const resetForm = () => {
+    setUploadFile(null);
+    setUploadDesc("");
+    setValidationErrors({});
+    dispatch(clearError());
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -113,7 +120,7 @@ export default function UploadImage() {
         error={validationErrors.description}
         required
       />
-      <ErrorBanner>{validationError || uploadError}</ErrorBanner>
+      <ErrorBanner>{uploadError}</ErrorBanner>
       <div className="upload-actions">
         <Button type="submit" variant="primary" disabled={uploading}>
           {uploading ? "Uploading..." : "Upload"}
@@ -123,12 +130,7 @@ export default function UploadImage() {
           variant="danger"
           onClick={() => {
             setShowUploadForm(false);
-            setUploadFile(null);
-            setUploadDesc("");
-            setValidationErrors({});
-            if (fileInputRef.current) {
-              fileInputRef.current.value = "";
-            }
+            resetForm();
           }}
         >
           Close

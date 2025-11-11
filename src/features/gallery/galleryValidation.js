@@ -17,7 +17,7 @@ export function galleryValidateImageDescription(description) {
   if (!trimmed) {
     return { isValid: false, error: "Description is required" };
   }
-  if (trimmed.length > 500) {
+  if (trimmed.length > 300) {
     return {
       isValid: false,
       error: "Description must not exceed 500 characters",

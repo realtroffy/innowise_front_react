@@ -90,18 +90,6 @@ const gallerySlice = createSlice({
       state.images = [];
       state.pagination = { page: 0, size: 10, hasNext: false };
     },
-    updateImageLikeState: (state, { payload }) => {
-      const image = payload;
-      if (state.currentImage?.id === image.id) {
-        state.currentImage = galleryService.updateImageLikeState(image);
-      }
-      const index = state.images.findIndex((img) => img.id === image.id);
-      if (index !== -1) {
-        state.images[index] = galleryService.updateImageLikeState(
-          state.images[index]
-        );
-      }
-    },
     addImage: (state, { payload }) => {
       state.images.unshift(payload);
     },
@@ -165,8 +153,12 @@ const gallerySlice = createSlice({
         state.error = extractErrorMessage(payload || {});
         state.currentImage = null;
       })
-
+      .addCase(toggleLike.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(toggleLike.fulfilled, (state, { payload }) => {
+        state.loading = false;
         const { imageId } = payload;
         if (state.currentImage?.id === imageId) {
           state.currentImage = galleryService.updateImageLikeState(
@@ -180,7 +172,10 @@ const gallerySlice = createSlice({
           );
         }
       })
-
+      .addCase(toggleLike.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = extractErrorMessage(payload || {});
+      })
       .addCase(uploadImage.pending, (state) => {
         state.loading = true;
         state.error = null;
