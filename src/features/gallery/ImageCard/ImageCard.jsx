@@ -4,13 +4,13 @@ import "./ImageCard.css";
 const DEFAULT_MAX_DESC_LEN = 300;
 
 export default function ImageCard({
-                                    image,
-                                    onClick,
-                                    showDetails = true,
-                                    showLike = false,
-                                    onLike,
-                                    maxDescLength = DEFAULT_MAX_DESC_LEN,
-                                  }) {
+  image,
+  onClick,
+  showDetails = true,
+  showLike = false,
+  onLike,
+  maxDescLength = DEFAULT_MAX_DESC_LEN,
+}) {
   if (!image) {
     return null;
   }
